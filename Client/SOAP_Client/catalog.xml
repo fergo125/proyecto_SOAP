@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://titanic.ecci.ucr.ac.cr:80/~eb23990/PlayGato/?wsdl" uri="xml-resources/web-service-references/WsClient/wsdl/titanic.ecci.ucr.ac.cr_80/_eb23990/PlayGato/.wsdl"/>
+</catalog>

@@ -1,5 +1,5 @@
 <?php
-
+ini_set("soap.wsdl_cache_enabled", 0);
 /**
  *
  * Copyright (c) 2005-2015, Braulio José Solano Rojas
@@ -35,16 +35,24 @@
  * @version $Id$
  * @copyright 2005-2015
  */
-
+require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/vendor/adodb/adodb-php/adodb-active-record.inc.php';
+require_once __DIR__ . '/vendor/adodb/adodb-php/adodb-time.inc.php';
 require_once 'gato.class.php';
+require_once 'scores.class.php';
+$db = NewADOConnection('postgres9://eb23990:eb23990@localhost/ci2413');
+$dictionary = NewDataDictionary($db);
+$dictionary->SetSchema('eb23990');
+$db->Execute('SET search_path TO eb23990');
+ADOdb_Active_Record::SetDatabaseAdapter($db);
+$GLOBALS['db']= $db;
+
 
 function autoinclude($className) {
 	$className = str_replace('\\', '/', $className) . '.php';
 	require_once $className;
 }
-
 spl_autoload_register('autoinclude');
-
 if (isset($_GET['wsdl'])) {
 	header('Content-Type: application/soap+xml; charset=utf-8');
 	echo file_get_contents('gato.wsdl');
@@ -55,7 +63,7 @@ else {
 	if (!isset($_SESSION['service'])) {
 		$_SESSION['service'] = new Gato();
 	}
-	$servidorSoap = new SoapServer('http://titanic.ecci.ucr.ac.cr:80/~eb23990/PlayGato/?wsdl');
+	$servidorSoap = new SoapServer('http://titanic.ecci.ucr.ac.cr:80/~eb23990/PlayGato/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 
 	//Para evitar la excepción por defecto de SOAP PHP cuando no existe HTTP_RAW_POST_DATA,
 	//se regresa explícitamente el siguiente fallo cuando no hay solicitud (v.b. desde un navegador)
